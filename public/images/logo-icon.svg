@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Square frame - dark navy -->
+  <rect x="9" y="9" width="75" height="75" rx="9"
+        stroke="#1B2461" stroke-width="13"/>
+  <!-- Checkmark - cyan blue -->
+  <polyline points="9,68 30,90 87,13"
+            stroke="#3CC4E5" stroke-width="13"
+            stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
