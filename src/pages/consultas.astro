@@ -1,0 +1,327 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Enviar consulta | Transparencia + Participación"
+  description="¿Tenés un caso o un tema que creas que debe investigarse? Envianos tu consulta y la canalizaremos en pedidos de acceso a la información pública."
+>
+  <article class="consultas-hero">
+    <div class="container">
+      <h1>Enviar una consulta</h1>
+      <p class="lead">
+        ¿Identificaste un tema de interes público que debería investigarse? ¿Un organismo que no brinda información? Compartí tu caso con nosotros y lo canalizaremos en pedidos de acceso a la información pública.
+      </p>
+    </div>
+  </article>
+
+  <section class="consultas-section">
+    <div class="container consultas-container">
+      <div class="consultas-form-wrapper">
+        <form name="consultas" method="POST" data-netlify="true" action="/gracias" class="consultas-form">
+          <input type="hidden" name="form-name" value="consultas" />
+
+          <!-- Nombre -->
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              required
+              placeholder="Tu nombre"
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email de contacto</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="tu@email.com"
+            />
+          </div>
+
+          <!-- Tema -->
+          <div class="form-group">
+            <label for="tema">Tema / Título de la consulta</label>
+            <input
+              type="text"
+              id="tema"
+              name="tema"
+              required
+              placeholder="Ej: Falta de transparencia en contratos del Banco Ciudad"
+            />
+          </div>
+
+          <!-- Descripción -->
+          <div class="form-group">
+            <label for="descripcion">Descripción del caso</label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              required
+              rows="6"
+              placeholder="Contanos qué pasó, por qué te interesa que se investigue, qué documentos o información te gustaría obtener..."
+            ></textarea>
+          </div>
+
+          <!-- Organismo -->
+          <div class="form-group">
+            <label for="organismo">Organismo / Empresa involucrada (si corresponde)</label>
+            <input
+              type="text"
+              id="organismo"
+              name="organismo"
+              placeholder="Ej: Gobierno de la Ciudad, Banco Galicia, etc."
+            />
+          </div>
+
+          <!-- Documentos/Fuentes -->
+          <div class="form-group">
+            <label for="documentos">Documentos o fuentes que tengas (opcional)</label>
+            <textarea
+              id="documentos"
+              name="documentos"
+              rows="3"
+              placeholder="Links, PDFs, comunicaciones que ya tengas sobre el tema..."
+            ></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-submit">
+            Enviar consulta
+          </button>
+        </form>
+
+        <!-- Info sidebard -->
+        <aside class="consultas-info">
+          <div class="info-box">
+            <h3>¿Qué hacemos con tu consulta?</h3>
+            <ul>
+              <li>Revisamos tu caso</li>
+              <li>Canalizamos en un pedido formal de Acceso a la Información</li>
+              <li>Te mantenemos informado del proceso</li>
+              <li>Publicamos los resultados en el sitio (con tu consentimiento)</li>
+            </ul>
+          </div>
+
+          <div class="info-box">
+            <h3>Contacto directo</h3>
+            <p><strong>Email:</strong> transparenciamasparticipacion@gmail.com</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .consultas-hero {
+    background: linear-gradient(135deg, #2C3E50 0%, #1B2461 100%);
+    color: white;
+    padding: var(--space-3xl) 0;
+    margin-bottom: var(--space-3xl);
+  }
+
+  .consultas-hero h1 {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--space-md);
+  }
+
+  .consultas-hero .lead {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.95);
+    max-width: 70ch;
+  }
+
+  .consultas-section {
+    padding: var(--space-2xl) 0;
+  }
+
+  .consultas-container {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--space-2xl);
+  }
+
+  .consultas-form-wrapper {
+    display: contents;
+  }
+
+  .consultas-form {
+    grid-column: 1;
+  }
+
+  .form-group {
+    margin-bottom: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group label {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+  }
+
+  .form-group input,
+  .form-group textarea {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-bg-card);
+    color: var(--color-text);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .btn-submit {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: var(--space-md) var(--space-xl);
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .btn-submit:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-2px);
+  }
+
+  .btn-submit:active {
+    transform: translateY(0);
+  }
+
+  /* Info sidebar */
+  .consultas-info {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .info-box {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-light);
+    border-radius: 8px;
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .info-box h3 {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: var(--space-md);
+    color: var(--color-accent);
+  }
+
+  .info-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .info-box li {
+    padding-left: 24px;
+    position: relative;
+    margin-bottom: var(--space-sm);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+  }
+
+  .info-box li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: bold;
+  }
+
+  .info-box p {
+    margin: var(--space-sm) 0;
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+  }
+
+  .info-box p strong {
+    color: var(--color-text);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .consultas-hero h1 {
+      font-size: 2rem;
+    }
+
+    .consultas-hero .lead {
+      font-size: 1rem;
+    }
+
+    .consultas-container {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+    }
+
+    .consultas-info {
+      grid-column: 1;
+    }
+
+    .info-box {
+      padding: var(--space-md);
+    }
+
+    .btn-submit {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .consultas-hero {
+      padding: var(--space-2xl) 0;
+      margin-bottom: var(--space-2xl);
+    }
+
+    .consultas-hero h1 {
+      font-size: 1.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      font-size: 16px; /* Previene zoom en iOS */
+    }
+  }
+</style>

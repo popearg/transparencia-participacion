@@ -1,0 +1,150 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="¡Gracias! | Transparencia + Participación"
+  description="Tu consulta fue enviada correctamente. Te contactaremos pronto."
+>
+  <article class="gracias-container">
+    <div class="gracias-content">
+      <div class="gracias-icon">✓</div>
+      <h1>¡Gracias por tu consulta!</h1>
+      <p class="gracias-message">
+        Recibimos tu mensaje correctamente. Nos pondremos en contacto pronto para revisar tu caso y canalizarlo en un pedido de acceso a la información pública.
+      </p>
+
+      <div class="gracias-info">
+        <h2>¿Qué sucede ahora?</h2>
+        <ol>
+          <li>Revisamos tu consulta y la contextualizamos</li>
+          <li>Nos comunicamos contigo (vía email) para aclarar detalles si es necesario</li>
+          <li>Presentamos un pedido formal de Acceso a la Información ante el organismo</li>
+          <li>Compartimos los resultados cuando obtenemos respuesta</li>
+        </ol>
+      </div>
+
+      <div class="gracias-footer">
+        <p>Si tiene preguntas, escribinos a <strong>transparenciamasparticipacion@gmail.com</strong></p>
+      </div>
+
+      <a href="/" class="btn-volver">Volver al inicio</a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .gracias-container {
+    min-height: calc(100vh - var(--header-height) - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3xl) 0;
+  }
+
+  .gracias-content {
+    max-width: 600px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.05) 0%, rgba(27, 36, 97, 0.05) 100%);
+    padding: var(--space-3xl);
+    border-radius: 12px;
+    border: 1px solid var(--color-border-light);
+  }
+
+  .gracias-icon {
+    font-size: 4rem;
+    color: var(--color-accent);
+    margin-bottom: var(--space-lg);
+  }
+
+  .gracias-content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+  }
+
+  .gracias-message {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .gracias-info {
+    text-align: left;
+    background: var(--color-bg-card);
+    padding: var(--space-lg);
+    border-radius: 8px;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .gracias-info h2 {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    margin-bottom: var(--space-md);
+  }
+
+  .gracias-info ol {
+    list-style: decimal;
+    margin-left: var(--space-lg);
+  }
+
+  .gracias-info li {
+    margin-bottom: var(--space-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .gracias-footer {
+    background: var(--color-bg);
+    padding: var(--space-lg);
+    border-radius: 8px;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .gracias-footer p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .btn-volver {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: var(--space-md) var(--space-xl);
+    background: var(--color-accent);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .btn-volver:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .gracias-container {
+      padding: var(--space-2xl) var(--space-lg);
+    }
+
+    .gracias-content {
+      padding: var(--space-2xl) var(--space-lg);
+    }
+
+    .gracias-content h1 {
+      font-size: 1.5rem;
+    }
+
+    .gracias-message {
+      font-size: 1rem;
+    }
+  }
+</style>
