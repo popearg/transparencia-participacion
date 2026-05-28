@@ -1,0 +1,361 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { readdir, readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+
+export async function getStaticPaths() {
+  const notasDir = join(process.cwd(), 'src/content/notas');
+  let paths: any[] = [];
+
+  try {
+    const files = await readdir(notasDir);
+    const mdFiles = files.filter((f: string) => f.endsWith('.md'));
+
+    for (const file of mdFiles) {
+      const content = await readFile(join(notasDir, file), 'utf-8');
+      const slug = file.replace('.md', '');
+      const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+      if (!frontmatterMatch) continue;
+
+      const fm = frontmatterMatch[1];
+      const body = content.replace(/^---\n[\s\S]*?\n---\n*/, '');
+      const title = fm.match(/title:\s*"([^"]*)"/)?.[1] || '';
+      const tagsMatch = fm.match(/tags:\s*\[([^\]]*)\]/)?.[1] || '';
+      const tags = tagsMatch.split(',').map((t: string) => t.trim().replace(/"/g, '')).filter(Boolean);
+      const date = fm.match(/date:\s*(\S+)/)?.[1] || '2025-01-01';
+      const category = fm.match(/category:\s*"([^"]*)"/)?.[1] || 'Acceso a la informacion';
+      const image = fm.match(/image:\s*"([^"]*)"/)?.[1] || '';
+
+      paths.push({
+        params: { slug },
+        props: { title, tags, date, category, image, body },
+      });
+    }
+  } catch (e) {
+    // no notas
+  }
+
+  return paths;
+}
+
+const { title, tags, date, category, image, body } = Astro.props;
+
+const categoryColors: Record<string, string> = {
+  'Acceso a la informacion': 'var(--color-cat-acceso)',
+  'Gasto publico': 'var(--color-cat-gasto)',
+  'Causa colectiva': 'var(--color-cat-colectiva)',
+  'Transparencia': 'var(--color-cat-transparencia)',
+};
+
+const catColor = categoryColors[category] || 'var(--color-cat-acceso)';
+
+const formattedDate = new Date(date + 'T12:00:00').toLocaleDateString('es-AR', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+// Markdown to HTML conversion (handles mammoth output conventions)
+function markdownToHtml(md: string): string {
+  let html = md;
+
+  // 1. Clean up mammoth backslash escapes (e.g. \. \( \) \! \[ \] \- \*)
+  html = html.replace(/\\([.()!\[\]\-*_#`~>|{}])/g, '$1');
+
+  // 2. Strip any leftover HTML anchor tags from Google Docs
+  html = html.replace(/<a\s+id="[^"]*"><\/a>/g, '');
+  html = html.replace(/<a\s+id='[^']*'><\/a>/g, '');
+
+  // 3. Headers
+  html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+
+  // 4. Bold and italic — both ** and __ conventions (mammoth uses __)
+  html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+  html = html.replace(/___(.+?)___/g, '<strong><em>$1</em></strong>');
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
+
+  // 5. Links
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+  // 6. Ordered lists (mammoth sometimes generates these)
+  html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+
+  // 7. Unordered lists
+  html = html.replace(/^[-*] (.+)$/gm, '<li>$1</li>');
+
+  // Wrap consecutive <li> in <ul>
+  html = html.replace(/(<li>[\s\S]*?<\/li>\n?)+/g, (match) => `<ul>${match}</ul>`);
+
+  // 8. Blockquotes
+  html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+
+  // 9. Paragraphs — wrap remaining non-block lines
+  const lines = html.split('\n');
+  let result = '';
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      result += '\n';
+      continue;
+    }
+    const isBlock = trimmed.startsWith('<h') ||
+      trimmed.startsWith('<ul') ||
+      trimmed.startsWith('<ol') ||
+      trimmed.startsWith('<blockquote') ||
+      trimmed.startsWith('<li') ||
+      trimmed.startsWith('<img') ||
+      trimmed.startsWith('<div') ||
+      trimmed.startsWith('<p');
+    if (isBlock) {
+      result += trimmed + '\n';
+    } else {
+      result += `<p>${trimmed}</p>\n`;
+    }
+  }
+
+  return result;
+}
+
+const htmlContent = markdownToHtml(body);
+---
+
+<BaseLayout title={title}>
+  <article class="nota-article">
+    {image && (
+      <div class="nota-hero-image">
+        <img src={image} alt="" />
+      </div>
+    )}
+    <div class="container nota-container">
+      <header class="nota-header">
+        <a href="/" class="back-link">Volver a investigaciones</a>
+        <span class="nota-category" style={`color: ${catColor}`}>{category}</span>
+        <h1 class="nota-title">{title}</h1>
+        <div class="nota-meta">
+          <div class="nota-tags">
+            {tags.map((tag: string) => (
+              <span class="nota-tag">{tag}</span>
+            ))}
+          </div>
+          <time class="nota-date" datetime={date}>{formattedDate}</time>
+        </div>
+      </header>
+
+      <div class="nota-body" set:html={htmlContent} />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .nota-article {
+    max-width: 100%;
+  }
+
+  .nota-hero-image {
+    width: 100%;
+    max-height: 480px;
+    overflow: hidden;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .nota-hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .nota-container {
+    max-width: 760px;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .back-link::before {
+    content: '\2190\00a0';
+  }
+
+  .back-link:hover {
+    color: var(--color-text);
+  }
+
+  .nota-header {
+    margin-bottom: var(--space-2xl);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .nota-category {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+  }
+
+  .nota-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: var(--space-lg);
+  }
+
+  .nota-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+
+  .nota-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .nota-tag {
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: var(--color-bg);
+    color: var(--color-text-secondary);
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+  }
+
+  .nota-date {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  /* Article body styles */
+  .nota-body {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--color-text);
+  }
+
+  .nota-body :global(p) {
+    margin-bottom: 1.25em;
+  }
+
+  .nota-body :global(h2) {
+    font-size: 1.6rem;
+    margin-top: 2em;
+    margin-bottom: 0.75em;
+  }
+
+  .nota-body :global(h3) {
+    font-size: 1.3rem;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .nota-body :global(h4) {
+    font-size: 1.1rem;
+    margin-top: 1.25em;
+    margin-bottom: 0.5em;
+  }
+
+  .nota-body :global(strong) {
+    font-weight: 600;
+  }
+
+  .nota-body :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    transition: color var(--transition-fast);
+  }
+
+  .nota-body :global(a:hover) {
+    color: var(--color-accent-hover);
+  }
+
+  .nota-body :global(ul),
+  .nota-body :global(ol) {
+    margin-bottom: 1.25em;
+    padding-left: 1.5em;
+  }
+
+  .nota-body :global(li) {
+    margin-bottom: 0.4em;
+  }
+
+  .nota-body :global(blockquote) {
+    border-left: 3px solid var(--color-accent);
+    padding-left: var(--space-lg);
+    margin: 1.5em 0;
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+
+  .nota-body :global(img) {
+    border-radius: 6px;
+    margin: 1.5em 0;
+  }
+
+  /* Documentos fuente section */
+  .nota-body :global(hr) {
+    border: none;
+    border-top: 1px solid var(--color-border-light);
+    margin: 2.5em 0;
+  }
+
+  .nota-body :global(h2:has(+ ul a[href$=".pdf"])),
+  .nota-body :global(h2) {
+    /* h2 inside nota body */
+  }
+
+  /* Style PDF links specially */
+  .nota-body :global(a[href$=".pdf"]) {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-accent);
+    font-size: 0.9rem;
+    text-decoration: none;
+    padding: 2px 0;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--transition-fast);
+  }
+
+  .nota-body :global(a[href$=".pdf"])::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 14 16' fill='none'%3E%3Crect width='14' height='16' rx='2' fill='%232C3E50' opacity='0.15'/%3E%3Cpath d='M3 4h6M3 7h6M3 10h4' stroke='%232C3E50' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+  }
+
+  .nota-body :global(a[href$=".pdf"]:hover) {
+    border-bottom-color: var(--color-accent);
+  }
+
+  @media (max-width: 768px) {
+    .nota-title {
+      font-size: 1.75rem;
+    }
+
+    .nota-body {
+      font-size: 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Sobre nosotros" description="Transparencia + Participacion: acceso a la informacion publica, causas colectivas y rendicion de cuentas.">
+  <div class="container about-container">
+    <header class="about-header">
+      <h1 class="about-title">Sobre nosotros</h1>
+    </header>
+
+    <div class="about-body">
+      <p class="about-lead">
+        Transparencia + Participacion es un proyecto dedicado a promover el acceso a la informacion publica, la rendicion de cuentas y la participacion ciudadana en Argentina.
+      </p>
+
+      <h2>Que hacemos</h2>
+      <p>
+        Realizamos pedidos de acceso a la informacion publica a organismos del Estado nacional, provincial y de la Ciudad Autonoma de Buenos Aires. Cuando esos pedidos son denegados o ignorados, acudimos a la justicia para hacer valer el derecho constitucional de acceso a la informacion.
+      </p>
+      <p>
+        Tambien promovemos causas colectivas en defensa de derechos que afectan a grandes grupos de personas: consumidores, usuarios de servicios publicos y ciudadanos cuyos derechos ambientales o patrimoniales son vulnerados.
+      </p>
+
+      <h2>Por que lo hacemos</h2>
+      <p>
+        El acceso a la informacion publica es un derecho fundamental y una herramienta esencial para la democracia. Sin informacion, no hay control ciudadano posible. Sin transparencia, el gasto publico se vuelve opaco y las decisiones del Estado quedan fuera del escrutinio de quienes las financian.
+      </p>
+      <p>
+        Creemos que cada peso del Estado es un peso de todos, y que la informacion sobre como se gasta, quien se beneficia y que resultados se obtienen debe estar disponible para cualquier persona que la solicite.
+      </p>
+
+      <h2>Como publicamos</h2>
+      <p>
+        En este sitio publicamos investigaciones, notas periodisticas y avances de los casos que llevamos adelante. Cada nota documenta un aspecto concreto de nuestro trabajo: un pedido de informacion, una respuesta (o falta de respuesta) del Estado, un analisis de contratos publicos, o el avance de una causa judicial.
+      </p>
+
+      <h2>Contacto</h2>
+      <p>
+        Si tenes informacion relevante, queres colaborar o necesitas ayuda para ejercer tu derecho de acceso a la informacion publica, escribinos a:
+      </p>
+      <p class="contact-email">
+        <a href="mailto:contacto@transparenciayparticipacion.org">contacto@transparenciayparticipacion.org</a>
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-container {
+    max-width: 760px;
+  }
+
+  .about-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .about-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+  }
+
+  .about-lead {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-2xl);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .about-body {
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+
+  .about-body h2 {
+    font-size: 1.5rem;
+    margin-top: 2em;
+    margin-bottom: 0.75em;
+  }
+
+  .about-body p {
+    margin-bottom: 1.25em;
+  }
+
+  .contact-email {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .contact-email a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 768px) {
+    .about-title {
+      font-size: 2rem;
+    }
+
+    .about-body {
+      font-size: 1rem;
+    }
+  }
+</style>

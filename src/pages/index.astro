@@ -1,17 +1,303 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NotaCard from '../components/NotaCard.astro';
+import { readdir, readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
+// Read all markdown files from content/notas
+const notasDir = join(process.cwd(), 'src/content/notas');
+let notas: any[] = [];
+
+try {
+  const files = await readdir(notasDir);
+  const mdFiles = files.filter((f: string) => f.endsWith('.md'));
+
+  for (const file of mdFiles) {
+    const content = await readFile(join(notasDir, file), 'utf-8');
+    const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+    if (!frontmatterMatch) continue;
+
+    const fm = frontmatterMatch[1];
+    const title = fm.match(/title:\s*"([^"]*)"/)?.[1] || '';
+    const tagsMatch = fm.match(/tags:\s*\[([^\]]*)\]/)?.[1] || '';
+    const tags = tagsMatch.split(',').map((t: string) => t.trim().replace(/"/g, '')).filter(Boolean);
+    const date = fm.match(/date:\s*(\S+)/)?.[1] || '2025-01-01';
+    const category = fm.match(/category:\s*"([^"]*)"/)?.[1] || 'Acceso a la informacion';
+    const summary = fm.match(/summary:\s*"([^"]*)"/)?.[1] || '';
+    const image = fm.match(/image:\s*"([^"]*)"/)?.[1] || '';
+    const slug = file.replace('.md', '');
+
+    notas.push({ title, slug, tags, date, category, summary, image });
+  }
+
+  // Sort by date descending
+  notas.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+} catch (e) {
+  // No notas yet
+}
+
+const categories = [
+  'Todos',
+  'Acceso a la informacion',
+  'Gasto publico',
+  'Causa colectiva',
+  'Transparencia',
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout>
+  <div class="container">
+    <section class="hero">
+      <h1 class="hero-title">Investigaciones</h1>
+      <p class="hero-subtitle">Notas periodisticas y avances de casos sobre acceso a la informacion publica y causas colectivas</p>
+    </section>
+
+    <section class="filters">
+      <div class="search-wrapper">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <input
+          type="text"
+          id="search-input"
+          class="search-input"
+          placeholder="Buscar por titulo, tag o contenido..."
+          autocomplete="off"
+        />
+      </div>
+      <div class="category-filters">
+        {categories.map((cat) => (
+          <button
+            class={`filter-btn ${cat === 'Todos' ? 'active' : ''}`}
+            data-category={cat}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+      <p class="results-count">
+        <span id="results-count">{notas.length}</span> {notas.length === 1 ? 'nota' : 'notas'}
+      </p>
+    </section>
+
+    <section class="gallery" id="gallery">
+      {notas.length > 0 ? (
+        notas.map((nota) => (
+          <NotaCard
+            title={nota.title}
+            slug={nota.slug}
+            tags={nota.tags}
+            date={nota.date}
+            category={nota.category}
+            summary={nota.summary}
+            image={nota.image}
+          />
+        ))
+      ) : (
+        <div class="empty-state">
+          <p>Todavia no hay notas publicadas.</p>
+          <p class="empty-hint">Importa notas con: <code>npm run import ruta/al/archivo.docx</code></p>
+        </div>
+      )}
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.nota-card') as NodeListOf<HTMLElement>;
+  const resultsCount = document.getElementById('results-count');
+
+  let activeCategory = 'Todos';
+
+  function filterCards() {
+    const query = searchInput?.value.toLowerCase().trim() || '';
+    let visible = 0;
+
+    cards.forEach((card) => {
+      const title = card.dataset.title || '';
+      const tags = card.dataset.tags?.toLowerCase() || '';
+      const summary = card.dataset.summary || '';
+      const category = card.dataset.category || '';
+
+      const matchesSearch = !query ||
+        title.includes(query) ||
+        tags.includes(query) ||
+        summary.includes(query);
+
+      const matchesCategory = activeCategory === 'Todos' || category === activeCategory;
+
+      if (matchesSearch && matchesCategory) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    if (resultsCount) {
+      resultsCount.textContent = String(visible);
+    }
+  }
+
+  searchInput?.addEventListener('input', filterCards);
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCategory = (btn as HTMLElement).dataset.category || 'Todos';
+      filterCards();
+    });
+  });
+</script>
+
+<style>
+  .hero {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: var(--space-sm);
+  }
+
+  .hero-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0;
+  }
+
+  .filters {
+    margin-bottom: var(--space-xl);
+  }
+
+  .search-wrapper {
+    position: relative;
+    margin-bottom: var(--space-md);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-bg-card);
+    color: var(--color-text);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+  }
+
+  .search-input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+
+  .filter-btn {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 6px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    background: var(--color-bg-card);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .filter-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .filter-btn.active {
+    background: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
+  }
+
+  .results-count {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xl);
+  }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--space-3xl) var(--space-lg);
+    color: var(--color-text-muted);
+  }
+
+  .empty-state p {
+    margin-bottom: var(--space-sm);
+  }
+
+  .empty-hint {
+    font-size: 0.9rem;
+  }
+
+  .empty-hint code {
+    background: var(--color-bg-card);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 1024px) {
+    .gallery {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+
+    .category-filters {
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      padding-bottom: var(--space-sm);
+    }
+
+    .filter-btn {
+      white-space: nowrap;
+    }
+  }
+</style>
