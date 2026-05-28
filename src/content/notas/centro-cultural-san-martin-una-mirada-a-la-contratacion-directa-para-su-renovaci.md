@@ -3,7 +3,7 @@ title: "Centro Cultural San Martín: Una Mirada a la Contratación Directa para 
 tags: []
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/centro-cultural-san-martin-una-mirada-a-la-contratacion-directa-para-su-renovaci/cover.webp"
 summary: "El Gobierno de la Ciudad de Buenos Aires ha autorizado la contratación directa del estudio de arquitectura del arquitecto Raimundo Flah, que lideró la renovación del Teatro San Martin, para un proyecto de gran envergadura: la puesta en valor del Centro Cultural San Martín\.   Según la resolución,..."
 ---
 

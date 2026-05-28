@@ -3,7 +3,7 @@ title: "Grave Subestimación en el Canon de Concesión a Sebastian Battaglia en 
 tags: ["GCBA"]
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/grave-subestimacion-en-el-canon-de-concesion-a-sebastian-battaglia-en-parque-sar/cover.jpg"
 summary: "La metodología empleada por el Gobierno de la Ciudad de Buenos Aires para actualizar el canon de la concesión, de dos hectareas, otorgada a una empresa relacionada con el ex futbolista Sebastián Battaglia en el Parque Sarmiento es objeto de serias dudas y exige una pronta aclaración por parte de ..."
 ---
 

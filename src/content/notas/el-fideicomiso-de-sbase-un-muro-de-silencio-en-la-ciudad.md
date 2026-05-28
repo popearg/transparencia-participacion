@@ -3,7 +3,7 @@ title: "El Fideicomiso de SBASE: ¿Un Muro de Silencio en la Ciudad?"
 tags: ["GCBA"]
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/el-fideicomiso-de-sbase-un-muro-de-silencio-en-la-ciudad/cover.webp"
 summary: "Recientemente, buscamos información sobre el fideicomiso que administra Subterráneos de Buenos Aires \(SBASE\), un ente clave para la infraestructura del transporte público de nuestra ciudad\.  Lo que encontramos fue más un muro de silencio que una puerta abierta a la transparencia\."
 ---
 

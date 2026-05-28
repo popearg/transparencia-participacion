@@ -3,7 +3,7 @@ title: "Hoteles de Chapadmalal y Embalse Rio Tercero: mientras el gobierno asegu
 tags: ["Estado Nacional"]
 date: 2025-01-01
 category: "Acceso a la informacion"
-image: ""
+image: "/images/hoteles-de-chapadmalal-y-embalse-rio-tercero-mientras-el-gobierno-asegura-que-se/cover.jpg"
 summary: "El futuro de los complejos hoteleros de Chapadmalal y Embalse Río Tercero se encuentra en el centro de la polémica, con un fuerte contraste entre los anuncios públicos y la información oficial\.  Mientras figuras gubernamentales celebran la decisión de privatizar ambos complejos de hoteles, un do..."
 ---
 

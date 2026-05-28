@@ -3,7 +3,7 @@ title: "Detrás de los Números: La Vital Importancia del Acceso a la Informaci�
 tags: []
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/detras-de-los-numeros-la-vital-importancia-del-acceso-a-la-informacion-publica-e/cover.jpg"
 summary: "El reciente informe de Clarín, \"Sueldos del Gobierno: siguen congelados para Javier Milei, su vice y los ministros, ¿qué pasó con el ARCA que cobraba 22 millones? \", disponible en https://www\."
 ---
 

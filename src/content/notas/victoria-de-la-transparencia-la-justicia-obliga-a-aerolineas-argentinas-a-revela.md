@@ -3,7 +3,7 @@ title: "¡Victoria de la transparencia\! La Justicia obliga a Aerolíneas Argent
 tags: ["Aerolineas Argentinas"]
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/victoria-de-la-transparencia-la-justicia-obliga-a-aerolineas-argentinas-a-revela/cover.jpg"
 summary: "Una excelente noticia para la transparencia y el derecho a la información pública llega desde la Justicia\.  La Cámara de Apelaciones del Fuero Contencioso Administrativo Federal falló a favor del amparo presentado por la periodista Giselle Leclercq, con el patrocinio de Poder Ciudadano, ordenand..."
 ---
 

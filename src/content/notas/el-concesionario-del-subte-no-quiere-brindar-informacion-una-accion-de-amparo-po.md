@@ -3,7 +3,7 @@ title: "El concesionario del subte no quiere brindar información: Una acción d
 tags: []
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/el-concesionario-del-subte-no-quiere-brindar-informacion-una-accion-de-amparo-po/cover.jpg"
 summary: "El acceso a la información pública es un derecho fundamental que sostiene la transparencia y la rendición de cuentas en una sociedad democrática\.  En Argentina, la Ley 27\."
 ---
 

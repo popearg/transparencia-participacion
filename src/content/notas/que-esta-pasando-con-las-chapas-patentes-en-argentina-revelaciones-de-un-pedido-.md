@@ -3,7 +3,7 @@ title: "¿Qué está pasando con las chapas patentes en Argentina? Revelaciones 
 tags: ["Estado Nacional"]
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/que-esta-pasando-con-las-chapas-patentes-en-argentina-revelaciones-de-un-pedido-/cover.jpg"
 summary: "La entrega de chapas patentes por parte del Estado Nacional ha sido objeto de debate público en los últimos tiempos, con informes de escasez que afectan a vehículos nuevos y a aquellos que necesitan reemplazo\.  Un reciente pedido de acceso a la información pública revela detalles sobre la situac..."
 ---
 

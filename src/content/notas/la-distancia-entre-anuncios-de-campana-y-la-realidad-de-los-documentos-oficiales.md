@@ -3,7 +3,7 @@ title: "La distancia entre anuncios de campaña y la realidad de los documentos 
 tags: []
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/la-distancia-entre-anuncios-de-campana-y-la-realidad-de-los-documentos-oficiales/cover.jpg"
 summary: "En un contexto de campaña electoral para legisladores de la ciudad, el gobierno realizó anuncios sobre el inicio de los proyectos del Trambus y la Línea F de subte, buscando proyectar una imagen de avance y modernización en el transporte público\.  Distintos medios de comunicación se hicieron eco..."
 ---
 

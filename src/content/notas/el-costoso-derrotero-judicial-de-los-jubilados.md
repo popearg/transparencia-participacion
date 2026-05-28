@@ -3,7 +3,7 @@ title: "El Costoso Derrotero Judicial de los Jubilados"
 tags: ["Estado Nacional"]
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/el-costoso-derrotero-judicial-de-los-jubilados/cover.jpg"
 summary: "Litigar contra el Estado tiene un precio, y no solo para los jubilados que se ven obligados a iniciar juicios para reclamar lo que les corresponde\.  Las arcas públicas también se resienten ante la litigiosidad previsional, que en los últimos años ha significado un desembolso millonario para el E..."
 ---
 

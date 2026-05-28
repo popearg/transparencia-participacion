@@ -3,7 +3,7 @@ title: "La transparencia gana: Acceso a la información revela millonaria recaud
 tags: []
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/la-transparencia-gana-acceso-a-la-informacion-revela-millonaria-recaudacion-del-/cover.jpg"
 summary: "Una importante victoria para la transparencia y el derecho a la información pública se concretó recientemente en la Ciudad Autónoma de Buenos Aires\.  Tras un juicio de acceso a la información pública se logró que Lotería de la Ciudad finalmente revelara datos cruciales sobre la recaudación gener..."
 ---
 

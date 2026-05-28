@@ -3,7 +3,7 @@ title: "Correo Argentino se niega a brindar información pública sobre su perso
 tags: []
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/correo-argentino-se-niega-a-proporcionar-informacion-sobre-su-nomina-de-personal/cover.jpg"
 summary: "En un contexto donde la transparencia y el acceso a la información pública son pilares fundamentales para la rendición de cuentas y la confianza ciudadana, la postura del Correo Argentino genera preocupación\.  Ante un pedido de información pública, se ha negado a proporcionar detalles cruciales ..."
 ---
 

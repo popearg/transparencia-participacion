@@ -3,7 +3,7 @@ title: "Banco Ciudad: ¿Por qué se evitó la licitación en el desarrollo de la
 tags: ["GCBA"]
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/banco-ciudad-por-que-se-evito-la-licitacion-en-el-desarrollo-de-la-app-buepp/cover.jpg"
 summary: "La aplicación BUEPP, desarrollada para el Banco Ciudad, fue realizada a través de una contratación directa con Red Link S\. A\."
 ---
 

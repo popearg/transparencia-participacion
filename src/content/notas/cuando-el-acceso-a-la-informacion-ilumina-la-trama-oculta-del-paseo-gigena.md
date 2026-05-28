@@ -3,7 +3,7 @@ title: "Cuando el acceso a la información ilumina la trama oculta del Paseo Gig
 tags: []
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/cuando-el-acceso-a-la-informacion-ilumina-la-trama-oculta-del-paseo-gigena/cover.jpg"
 summary: "A partir de un caso judicial que realizamos por acceso a la información denegada, el DiarioAr publicó el 4 de mayo una [nota](https://www. eldiarioar."
 ---
 

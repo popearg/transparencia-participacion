@@ -3,7 +3,7 @@ title: "¿Transparencia en Obra Pública? El GCBA y la Opacidad en la Gestión d
 tags: []
 date: 2025-01-01
 category: "Transparencia"
-image: ""
+image: "/images/transparencia-en-obra-publica-el-gcba-y-la-opacidad-en-la-gestion-de-roturas-de-/cover.jpg"
 summary: "La Ciudad de Buenos Aires enfrenta un problema recurrente que afecta a todos sus habitantes: las veredas rotas\.  Los reclamos por el estado de las aceras son moneda corriente, y la falta de información clara sobre la planificación y coordinación de las obras no hace más que aumentar el desconten..."
 ---
 

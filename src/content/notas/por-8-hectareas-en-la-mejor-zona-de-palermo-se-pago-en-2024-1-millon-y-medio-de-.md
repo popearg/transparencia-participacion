@@ -3,7 +3,7 @@ title: "Por 8 hectáreas en la mejor zona de Palermo se pagó en 2024 1 millón 
 tags: ["GCBA"]
 date: 2025-01-01
 category: "Gasto publico"
-image: ""
+image: "/images/por-8-hectareas-en-la-mejor-zona-de-palermo-se-pago-en-2024-1-millon-y-medio-de-/cover.jpg"
 summary: "La Ciudad de Buenos Aires se encuentra ante un nuevo foco de debate en torno a la gestión de sus bienes públicos\.  El Club de Amigos, un club con precios que lo hacen muy exclusivo, ha reportado un déficit operativo en 2024 y por ese motivo, el contrato estableció que debía pagar solo $18 millon..."
 ---
 

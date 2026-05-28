@@ -3,7 +3,7 @@ title: "El Gobierno Nacional Obstaculiza el Acceso a la Información sobre los l
 tags: ["Estado Nacional"]
 date: 2025-01-01
 category: "Transparencia"
-image: ""
+image: "/images/el-gobierno-nacional-obstaculiza-el-acceso-a-la-informacion-sobre-los-locales-co/cover.jpg"
 summary: "La falta de transparencia en la gestión de los espacios públicos vuelve a ser noticia\.  En esta ocasión, el Gobierno Nacional se niega a proporcionar información detallada sobre los locales comerciales ubicados en el viaducto del ferrocarril Mitre, una zona de gran interés público y comercial do..."
 ---
 
