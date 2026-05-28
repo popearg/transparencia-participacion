@@ -3,7 +3,7 @@ title: "Contaminación vehicular: La Ley Olvidada"
 tags: ["GCBA"]
 date: 2025-01-01
 category: "Acceso a la informacion"
-image: "/images/contaminacion-vehicular-la-ley-olvidada/image_2_.png"
+image: "/images/contaminacion-vehicular-la-ley-olvidada/cover.jpg"
 summary: "__¿Quién controla el humo y el ruido que respiramos \(y escuchamos\) en Buenos Aires? __ Un pedido de acceso a la información dejó al descubierto una realidad preocupante: la Agencia de Protección Ambiental \(APRA\) admitió estar \"trabajando internamente en la planificación de próximos operativos..."
 ---
 
