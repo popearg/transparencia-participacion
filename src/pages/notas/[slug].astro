@@ -71,7 +71,17 @@ function markdownToHtml(md: string): string {
   html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
   html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
 
-  // 4. Bold and italic — both ** and __ conventions (mammoth uses __)
+  // 4. Protect link URLs from inline-formatting regexes
+  //    (underscores in filenames like File_Name.pdf must not become <em> tags)
+  const urlTokens: { [key: string]: string } = {};
+  let tokenIdx = 0;
+  html = html.replace(/\]\(([^)]+)\)/g, (_match, url) => {
+    const token = `\x00${tokenIdx++}\x00`;
+    urlTokens[token] = url;
+    return `](${token})`;
+  });
+
+  // 5. Bold and italic — both ** and __ conventions (mammoth uses __)
   html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
   html = html.replace(/___(.+?)___/g, '<strong><em>$1</em></strong>');
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
@@ -79,22 +89,29 @@ function markdownToHtml(md: string): string {
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
   html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
 
-  // 5. Links
+  // 6. Restore link URLs
+  for (const [token, url] of Object.entries(urlTokens)) {
+    html = html.replace(token, url);
+  }
+
+  // 7. Links — PDF links get a special preview button, others are normal links
+  html = html.replace(/\[([^\]]+)\]\(([^)]+\.pdf)\)/gi,
+    '<button class="doc-preview-btn" data-pdf="$2" data-name="$1"><svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="13" height="15" rx="1.5" stroke="currentColor"/><path d="M3 5h8M3 8h8M3 11h5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>$1</button>');
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
 
-  // 6. Ordered lists (mammoth sometimes generates these)
+  // 8. Ordered lists (mammoth sometimes generates these)
   html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
 
-  // 7. Unordered lists
+  // 9. Unordered lists
   html = html.replace(/^[-*] (.+)$/gm, '<li>$1</li>');
 
   // Wrap consecutive <li> in <ul>
   html = html.replace(/(<li>[\s\S]*?<\/li>\n?)+/g, (match) => `<ul>${match}</ul>`);
 
-  // 8. Blockquotes
+  // 10. Blockquotes
   html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
 
-  // 9. Paragraphs — wrap remaining non-block lines
+  // 11. Paragraphs — wrap remaining non-block lines
   const lines = html.split('\n');
   let result = '';
 
@@ -150,7 +167,71 @@ const htmlContent = markdownToHtml(body);
       <div class="nota-body" set:html={htmlContent} />
     </div>
   </article>
+
+  <!-- PDF Preview Modal -->
+  <div id="pdf-modal" class="pdf-modal" aria-modal="true" role="dialog" aria-label="Vista previa del documento" hidden>
+    <div class="pdf-modal-backdrop"></div>
+    <div class="pdf-modal-container">
+      <div class="pdf-modal-header">
+        <span class="pdf-modal-title" id="pdf-modal-title"></span>
+        <div class="pdf-modal-actions">
+          <a class="pdf-modal-download" id="pdf-modal-download" href="" download target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Descargar
+          </a>
+          <button class="pdf-modal-close" id="pdf-modal-close" aria-label="Cerrar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="pdf-modal-body">
+        <iframe id="pdf-modal-frame" class="pdf-modal-frame" title="Vista previa del documento"></iframe>
+      </div>
+    </div>
+  </div>
 </BaseLayout>
+
+<script>
+  const modal = document.getElementById('pdf-modal') as HTMLElement;
+  const frame = document.getElementById('pdf-modal-frame') as HTMLIFrameElement;
+  const titleEl = document.getElementById('pdf-modal-title') as HTMLElement;
+  const downloadBtn = document.getElementById('pdf-modal-download') as HTMLAnchorElement;
+  const closeBtn = document.getElementById('pdf-modal-close') as HTMLButtonElement;
+  const backdrop = modal?.querySelector('.pdf-modal-backdrop') as HTMLElement;
+
+  function openModal(pdfUrl: string, name: string) {
+    frame.src = pdfUrl;
+    titleEl.textContent = name;
+    downloadBtn.href = pdfUrl;
+    downloadBtn.download = name + '.pdf';
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    frame.src = 'about:blank';
+    document.body.style.overflow = '';
+  }
+
+  // Attach click handlers to all PDF preview buttons
+  document.querySelectorAll('.doc-preview-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pdfUrl = (btn as HTMLElement).dataset.pdf || '';
+      const name = (btn as HTMLElement).dataset.name || 'Documento';
+      openModal(pdfUrl, name);
+    });
+  });
+
+  closeBtn?.addEventListener('click', closeModal);
+  backdrop?.addEventListener('click', closeModal);
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.hidden) closeModal();
+  });
+</script>
 
 <style>
   .nota-article {
@@ -317,36 +398,157 @@ const htmlContent = markdownToHtml(body);
     margin: 2.5em 0;
   }
 
-  .nota-body :global(h2:has(+ ul a[href$=".pdf"])),
-  .nota-body :global(h2) {
-    /* h2 inside nota body */
-  }
-
-  /* Style PDF links specially */
-  .nota-body :global(a[href$=".pdf"]) {
+  /* PDF preview buttons */
+  .nota-body :global(.doc-preview-btn) {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
     color: var(--color-accent);
-    font-size: 0.9rem;
-    text-decoration: none;
-    padding: 2px 0;
-    border-bottom: 1px solid transparent;
-    transition: border-color var(--transition-fast);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-align: left;
+    width: 100%;
+    margin-bottom: 8px;
   }
 
-  .nota-body :global(a[href$=".pdf"])::before {
-    content: '';
-    display: inline-block;
-    width: 14px;
-    height: 16px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 14 16' fill='none'%3E%3Crect width='14' height='16' rx='2' fill='%232C3E50' opacity='0.15'/%3E%3Cpath d='M3 4h6M3 7h6M3 10h4' stroke='%232C3E50' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
+  .nota-body :global(.doc-preview-btn:hover) {
+    background: white;
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-sm);
+    transform: translateX(3px);
+  }
+
+  .nota-body :global(.doc-preview-btn svg) {
+    flex-shrink: 0;
+    opacity: 0.5;
+  }
+
+  /* PDF Modal */
+  .pdf-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+  }
+
+  .pdf-modal[hidden] {
+    display: none;
+  }
+
+  .pdf-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(3px);
+  }
+
+  .pdf-modal-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 920px;
+    height: 88vh;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .pdf-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border-light);
+    background: var(--color-bg);
+    flex-shrink: 0;
+    gap: var(--space-md);
+  }
+
+  .pdf-modal-title {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+  }
+
+  .pdf-modal-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
     flex-shrink: 0;
   }
 
-  .nota-body :global(a[href$=".pdf"]:hover) {
-    border-bottom-color: var(--color-accent);
+  .pdf-modal-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    text-decoration: none;
+    padding: 5px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    transition: all var(--transition-fast);
+    background: white;
+  }
+
+  .pdf-modal-download:hover {
+    background: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
+  }
+
+  .pdf-modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .pdf-modal-close:hover {
+    background: var(--color-text);
+    color: white;
+    border-color: var(--color-text);
+  }
+
+  .pdf-modal-body {
+    flex: 1;
+    overflow: hidden;
+    background: #525659;
+  }
+
+  .pdf-modal-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
   }
 
   @media (max-width: 768px) {
@@ -356,6 +558,17 @@ const htmlContent = markdownToHtml(body);
 
     .nota-body {
       font-size: 1rem;
+    }
+
+    .pdf-modal {
+      padding: 0;
+      align-items: flex-end;
+    }
+
+    .pdf-modal-container {
+      max-width: 100%;
+      height: 92vh;
+      border-radius: 14px 14px 0 0;
     }
   }
 </style>
