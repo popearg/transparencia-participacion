@@ -18,7 +18,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="consultas-section">
     <div class="container consultas-container">
       <div class="consultas-form-wrapper">
-        <form name="consultas" method="POST" data-netlify="true" action="/gracias" class="consultas-form">
+        <form name="consultas" method="POST" data-netlify="true" class="consultas-form" id="consultas-form">
           <input type="hidden" name="form-name" value="consultas" />
 
           <!-- Nombre -->
@@ -325,3 +325,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 </style>
+
+<script>
+  const form = document.getElementById('consultas-form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      // Dejar que Netlify maneje la captura del formulario
+      // Después redirigir a la página de gracias
+      setTimeout(() => {
+        window.location.href = '/gracias';
+      }, 1000);
+    });
+  }
+</script>
